@@ -90,6 +90,8 @@ class pc:
     def wake(self):
         self.active = True
         
+    def addItem(self, item):
+	self.inventory.append(item)
 
 
 
@@ -104,7 +106,7 @@ class pc:
 ######################### Enemy NPC #########################
 
 class ec:
-    def __init__(self, name, lvl, style, mana, hp, attr, init = 0, inventory = []):
+    def __init__(self, name, lvl, style, mana, hp, init = 0, location = "", loot = []):
         self.name = name
         self.lvl = int(lvl)
         self.style = style
@@ -112,12 +114,11 @@ class ec:
         self.mana = int(mana)
         self.hpmax = int(hp)
         self.hp = int(hp)
-        self.attr = attr.split(' ')
         self.init = int(init)
         self.condNote = ""
         self.active = True
-        self.init = init
-        self.inventory = inventroy
+        self.locationEncountered = location
+        self.loot = loot
     
 
     def resetMana(self):
@@ -157,6 +158,12 @@ class ec:
     
     def setCondNote(self, note):
         self.condNote = str(note)
+	
+    def setLocationEncountered(self, location):
+	self.locationEncountered = location
+
+    def addLoot(self, item):
+	self.loot.append(item)
 
     def sleep(self):
         self.active = False
