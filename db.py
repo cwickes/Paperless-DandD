@@ -8,14 +8,14 @@ class DND_DB:
 	def monsters(self, monName):
 		monName = monName.title()
 		print()
-		if (monName == "Aberration" || monName == "Animal" || monName == "Celestial" ||
-		monName == "Construct" || monName == "Dragon" || monName == "Elemental" ||
-		monName == "Fey" || monName == "Fiend" || monName == "Giant" || monName == "Humanoid" ||
-		monName == "Magical Beast" || monName == "Monstrous Humanoid" || monName == "Ooze" ||
-		monName == "Outsider" || monName == "Plant" || monName == "Undead" || monName == "Vermin"):
+		if (monName == "Aberration" or monName == "Animal" or monName == "Celestial" or
+		monName == "Construct" or monName == "Dragon" or monName == "Elemental" or
+		monName == "Fey" or monName == "Fiend" or monName == "Giant" or monName == "Humanoid" or
+		monName == "Magical Beast" or monName == "Monstrous Humanoid" or monName == "Ooze" or
+		monName == "Outsider" or monName == "Plant" or monName == "Undead" or monName == "Vermin"):
 			print(monName + " is a monster type, do you want monsters of that type listed? (y/n)")
 			yes = input()
-			if (yes.lower() == "y" || yes.lower() == "yes"):
+			if (yes.lower() == "y" or yes.lower() == "yes"):
 					monsterByType(monName)
 		else:
 			attributes = ["id", "family", "name", "altname", "size", "type", "descriptor", "hit_dice", 
