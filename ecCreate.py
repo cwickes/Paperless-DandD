@@ -14,9 +14,9 @@ def ecCreate(autoGen = True):
 	cur.execute("SELECT COUNT(*) FROM monster;")
 	monsterCount = cur.fetchone()[0]
 
-	# Random monster selection
+	# Random monster selection from local SQLite DB
 	monster = str(random.randint(1, monsterCount))
-	cur.execute("SELECT name, challenge_rating, type, hit_dice  FROM monster WHERE id = " + monster + ";")
+	cur.execute("SELECT name, challenge_rating, type, hit_dice FROM monster WHERE id = " + monster + ";")
 	monsterData = cur.fetchone()
 
 	# initialize monster data
