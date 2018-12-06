@@ -1011,8 +1011,8 @@ while True:
 
                         elif isinstance(command[2], str):
                                 charType2, charIndex2 = characterIndex(command[2])
-                                dmgstats[charIndex2] += command[3]
-                                hurtstats[charIndex1] += command[3]
+                                dmgstats[charIndex2] += int(command[3])
+                                hurtstats[charIndex1] += int(command[3])
                                 gameData[charType1][charIndex1].dmg(command[3])
 
                 elif (command[0] == "heal"):
@@ -1025,7 +1025,7 @@ while True:
 
                         elif isinstance(command[2], str):
                                 charType2, charIndex2 = characterIndex(command[2])
-                                healstats[charIndex1] += command[3]
+                                healstats[charIndex1] += int(command[3])
                                 gameData[charType1][charIndex1].heal(command[3])
 
                 elif (command[0] == "cast"):
@@ -1037,7 +1037,7 @@ while True:
 
                         elif isinstance(command[2],str):
                                 charType2, charIndex2 = characterIndex(command[2])
-                                manastats[charIndex2] -= command[3]
+                                manastats[charIndex2] -= int(command[3])
                                 gameData[charType2][charIndex2].cast(command[3])
 
                 elif (command[0] == "restore"):
@@ -1050,8 +1050,8 @@ while True:
 
                         elif isinstance(command[2],str):
                                 charType2, charIndex2 = characterIndex(command[2])
-                                healstats[charIndex2] += command[3]
-                                manastats[charIndex1] += command[3]                                            
+                                healstats[charIndex2] += int(command[3])
+                                manastats[charIndex1] += int(command[3])                                            
                                 gameDate[charType1][charIndex1].restore(command[3])
                                 gameDate[charType2][charIndex2].heal(command[3])
                 elif (command[1] == "mana"):
