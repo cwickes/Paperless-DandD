@@ -2,7 +2,9 @@ import sqlite3
 import os
 import random
 
-def ecCreate(autoGen):
+# method returns initialized ec object
+# autoGen is boolean variable used to determine whether to automatically generate hp value
+def ecCreate(autoGen = True):
 	# DB connect
 	dbFile = os.path.dirname(__file__) + '/dnd35.db'
 	con = sqlite3.connect(dbFile)
