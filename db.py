@@ -5,28 +5,49 @@ class DND_DB:
 		db = sqlite3.connect(name)
 		self.cursor = db.cursor()
 		
-	def monsters(self):
-		monName = input()
+	def monsters(self, monName):
+		monName = monName.title()
+		print()
+		if (monName == "Aberration" || monName == "Animal" || monName == "Celestial" ||
+		monName == "Construct" || monName == "Dragon" || monName == "Elemental" ||
+		monName == "Fey" || monName == "Fiend" || monName == "Giant" || monName == "Humanoid" ||
+		monName == "Magical Beast" || monName == "Monstrous Humanoid" || monName == "Ooze" ||
+		monName == "Outsider" || monName == "Plant" || monName == "Undead" || monName == "Vermin"):
+			print(monName + " is a monster type, do you want monsters of that type listed? (y/n)")
+			yes = input()
+			if (yes.lower() == "y" || yes.lower() == "yes"):
+					monsterByType(monName)
+		else:
+			attributes = ["id", "family", "name", "altname", "size", "type", "descriptor", "hit_dice", 
+			"initiative", "speed", "armor_class", "base_attack", "grapple", "attack", "full_attack",
+			"space", "reach", "special_attacks", "special_qualities", "saves", "abilities", "skills",
+			"bonus_feats", "feats", "epic_feats", "environment", "organization", "challenge_rating",
+			"treasure", "alignment", "advancement", "level_adjustment", "special_abilities",
+			"stat_block", "full_text", "reference"]
+			format = "SELECT * FROM monster WHERE (name='" + monName + "' OR altname='" + monName + "')"
+			self.cursor.execute(format)
+			if (len(self.cursor.fetchall()) == 0):
+				print("You did not enter a valid monster name.")
+			else:
+				self.cursor.execute(format)
+				temp = self.cursor.fetchall()[0]
+				for x in range (1, len(temp) - 2):
+					print(attributes[x] + ": " + temp[x])
+				
+	def monsterByType(self, monName):
 		monName = monName.capitalize()
 		print()
-		attributes = ["id", "family", "name", "altname", "size", "type", "descriptor", "hit_dice", 
-		"initiative", "speed", "armor_class", "base_attack", "grapple", "attack", "full_attack",
-		"space", "reach", "special_attacks", "special_qualities", "saves", "abilities", "skills",
-		"bonus_feats", "feats", "epic_feats", "environment", "organization", "challenge_rating",
-		"treasure", "alignment", "advancement", "level_adjustment", "special_abilities",
-		"stat_block", "full_text", "reference"]
-		format = "SELECT * FROM monster WHERE (name='" + monName + "' OR altname='"+ monName + "')"
+		format = "SELECT name FROM monster WHERE type='" + monName + "'"
 		self.cursor.execute(format)
 		if (len(self.cursor.fetchall()) == 0):
 			print("You did not enter a valid monster name.")
 		else:
 			self.cursor.execute(format)
-			temp = self.cursor.fetchall()[0]
-			for x in range (1, len(temp) - 2):
-				print(attributes[x] + ": " + temp[x])
-
-	def spells(self):
-		spellName = input()
+			temp = self.cursor.fetchall()
+			for x in range (0, len(temp)):
+				print(temp[x])
+				
+	def spells(self, spellName):
 		#spellName = spellName.capitalize()
 		print()
 		attributes = ["id", "name", "altname", "school", "subschool", "descriptor", "spellcraft_dc",
@@ -57,8 +78,7 @@ class DND_DB:
 			for x in range (1, len(temp) - 2):
 				print(temp[x])
 			
-	def items(self):
-		itemName = input()
+	def items(self, itemName):
 		itemName = itemName.capitalize()
 		print()
 		attributes = ["id", "name", "category", "subcategory", "special_ability", "aura", "caster_level",
@@ -73,8 +93,7 @@ class DND_DB:
 			for x in range (1, len(temp) - 2):
 				print(attributes[x] + ": " + temp[x])
 				
-	def equipment(self):
-		eName = input()
+	def equipment(self, eName):
 		eName = eName.capitalize()
 		print()
 		attributes = ["id", "name", "family", "category", "subcategory", "cost", "dmg_s",
@@ -92,8 +111,7 @@ class DND_DB:
 			for x in range (1, len(temp) - 2):
 				print(attributes[x] + ": " + temp[x])
 				
-	def monsterAlignment(self):
-		monAlign = input()
+	def monsterAlignment(self, monAlign):
 		print()
 		format = "SELECT name FROM monster WHERE alignment='" + monAlign + "'"
 		self.cursor.execute(format)
@@ -126,8 +144,7 @@ class DND_DB:
 			for x in range (0, len(temp)):
 				print(temp[x][0] + " is Often" + monAlign)
 			
-	def magicSchool(self):
-		school = input()
+	def magicSchool(self, school):
 		school = school.capitalize()
 		print()
 		format = "SELECT name, level FROM spell WHERE school='" + school + "'"
@@ -141,8 +158,7 @@ class DND_DB:
 				print(temp[x][0] + ", available to: " + temp[x][1])
 				
 	
-	def feats(self):
-		feat = input()
+	def feats(self, feat):
 		print()
 		attributes = ["id", "name", "type", "multiple", "stack", "choice", "prerequisite",
 		"benefit", "normal", "special", "full_text", "reference"]
@@ -154,4 +170,8 @@ class DND_DB:
 			self.cursor.execute(format)
 			temp = self.cursor.fetchall()[0]
 			for x in range (1, len(temp) - 2):
-				print(attributes[x] + ": " + temp[x])	
+				print(attributes[x] + ": " + temp[x])
+				
+				
+object = DND_DB()
+object.monsters("troll")
