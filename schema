@@ -1,0 +1,137 @@
+class class_table domain equipment feat item monster power skill spell
+
+CREATE TABLE class (id INTEGER PRIMARY KEY NOT NULL , name varchar NOT NULL , type varchar , alignment varchar , hit_die varchar , class_skills longtext , skill_points varchar , skill_points_ability varchar , spell_stat varchar , proficiencies longtext , spell_type varchar , epic_feat_base_level varchar , epic_feat_interval varchar , epic_feat_list longtext , epic_full_text longtext , req_race varchar , req_weapon_proficiency varchar , req_base_attack_bonus varchar , req_skill varchar , req_feat varchar , req_spells varchar , req_languages varchar , req_psionics varchar , req_epic_feat varchar , req_special varchar , spell_list_1 longtext , spell_list_2 varchar , spell_list_3 varchar , spell_list_4 varchar , spell_list_5 varchar , full_text longtext , reference varchar ) index class_name_index class 3 CREATE INDEX class_name_index ON class(name) table class_table class_table 666 CREATE TABLE class_table (id INTEGER PRIMARY KEY NOT NULL , name varchar NOT NULL , level varchar , base_attack_bonus varchar , fort_save varchar , ref_save varchar , will_save varchar , caster_level varchar , points_per_day varchar , ac_bonus varchar , flurry_of_blows varchar , bonus_spells varchar , powers_known varchar , unarmored_speed_bonus varchar , unarmed_damage varchar , power_level varchar , special varchar , slots_0 varchar , slots_1 varchar , slots_2 varchar , slots_3 varchar , slots_4 varchar , slots_5 varchar , slots_6 varchar , slots_7 varchar , slots_8 varchar , slots_9 varchar , spells_known_0 varchar , spells_known_1 varchar , spells_known_2 varchar , spells_known_3 varchar , spells_known_4 varchar , spells_known_5 varchar , spells_known_6 varchar , spells_known_7 varchar , spells_known_8 varchar , spells_known_9 varchar , reference varchar ) index class_table_name_index class_table 669 CREATE INDEX class_table_name_index ON class_table(name) table domain domain 933 CREATE TABLE domain (id INTEGER PRIMARY KEY NOT NULL , name varchar NOT NULL , granted_powers longtext , spell_1 varchar , spell_2 varchar , spell_3 varchar , spell_4 varchar , spell_5 varchar , spell_6 varchar , spell_7 varchar , spell_8 varchar , spell_9 varchar , full_text longtext , reference varchar ) index domain_name_index domain 934 CREATE INDEX domain_name_index ON domain(name) table equipment equipment 1002 CREATE TABLE equipment (id INTEGER PRIMARY KEY NOT NULL , name varchar NOT NULL , family varchar , category varchar , subcategory varchar , cost varchar , dmg_s varchar , armor_shield_bonus varchar , maximum_dex_bonus varchar , dmg_m varchar , weight varchar , critical varchar , armor_check_penalty varchar , arcane_spell_failure_chance varchar , range_increment varchar , speed_30 varchar , type varchar , speed_20 varchar , full_text longtext , reference varchar ) index equipment_name_index equipment 1004 CREATE INDEX equipment_name_index ON equipment(name) table feat feat 1141 CREATE TABLE feat (id INTEGER PRIMARY KEY NOT NULL , name varchar NOT NULL , type varchar , multiple varchar , stack varchar , choice varchar , prerequisite longtext , benefit longtext , normal longtext , special longtext , full_text longtext , reference varchar ) index feat_name_index feat 1142 CREATE INDEX feat_name_index ON feat(name) table item item 1767 CREATE TABLE item (id INTEGER PRIMARY KEY NOT NULL , name varchar NOT NULL , category varchar , subcategory varchar , special_ability varchar , aura varchar , caster_level varchar , price varchar , manifester_level varchar , prereq longtext , cost varchar , weight varchar , full_text longtext , reference varchar ) index item_name_index item 1769 CREATE INDEX item_name_index ON item(name) table monster monster 2865 CREATE TABLE monster (id INTEGER PRIMARY KEY NOT NULL , family varchar , name varchar NOT NULL , altname varchar , size varchar , type varchar , descriptor varchar , hit_dice varchar , initiative varchar , speed varchar , armor_class varchar , base_attack varchar , grapple varchar , attack varchar , full_attack longtext , space varchar , reach varchar , special_attacks varchar , special_qualities longtext , saves varchar , abilities varchar , skills longtext , bonus_feats varchar , feats longtext , epic_feats longtext , environment varchar , organization longtext , challenge_rating varchar , treasure varchar , alignment varchar , advancement varchar , level_adjustment varchar , special_abilities longtext , stat_block longtext , full_text longtext , reference varchar ) index monster_name_index monster 2867 CREATE INDEX monster_name_index ON monster(name) table power power 9015 CREATE TABLE power (id INTEGER PRIMARY KEY NOT NULL , name varchar NOT NULL , discipline varchar , subdiscipline varchar , descriptor varchar , level varchar , display varchar , manifesting_time varchar , range varchar , target varchar , area varchar , effect varchar , duration varchar , saving_throw varchar , power_points varchar , power_resistance varchar , short_description longtext , xp_cost longtext , description longtext , augment longtext , full_text longtext , reference varchar ) index power_name_index power 9017 CREATE INDEX power_name_index ON power(name) table skill skill 9963 CREATE TABLE skill (id INTEGER PRIMARY KEY NOT NULL , name varchar NOT NULL , subtype longtext , key_ability varchar , psionic varchar , trained varchar , armor_check varchar , description longtext , skill_check longtext , action longtext , try_again longtext , special longtext , restriction longtext , synergy longtext , epic_use longtext , untrained longtext , full_text longtext , reference varchar ) index skill_name_index skill 9965 CREATE INDEX skill_name_index ON skill(name) table spell spell 10365 CREATE TABLE spell (id INTEGER PRIMARY KEY NOT NULL , name varchar NOT NULL , altname varchar , school varchar , subschool varchar , descriptor varchar , spellcraft_dc varchar , level varchar , components longtext , casting_time varchar , range varchar , target varchar , area varchar , effect varchar , duration varchar , saving_throw varchar , spell_resistance varchar , short_description varchar , to_develop longtext , material_components longtext , arcane_material_components varchar , focus longtext , description longtext , xp_cost longtext , arcane_focus varchar , wizard_focus varchar , verbal_components varchar , sorcerer_focus varchar , bard_focus varchar , cleric_focus varchar , druid_focus varchar , full_text longtext , reference varchar )
+CREATE TABLE class_table (id INTEGER PRIMARY KEY NOT NULL , name varchar NOT NULL , level varchar , base_attack_bonus varchar , fort_save varchar , ref_save varchar , will_save varchar , caster_level varchar , points_per_day varchar , ac_bonus varchar , flurry_of_blows varchar , bonus_spells varchar , powers_known varchar , unarmored_speed_bonus varchar , unarmed_damage varchar , power_level varchar , special varchar , slots_0 varchar , slots_1 varchar , slots_2 varchar , slots_3 varchar , slots_4 varchar , slots_5 varchar , slots_6 varchar , slots_7 varchar , slots_8 varchar , slots_9 varchar , spells_known_0 varchar , spells_known_1 varchar , spells_known_2 varchar , spells_known_3 varchar , spells_known_4 varchar , spells_known_5 varchar , spells_known_6 varchar , spells_known_7 varchar , spells_known_8 varchar , spells_known_9 varchar , reference varchar )
+CREATE TABLE domain (id INTEGER PRIMARY KEY NOT NULL , name varchar NOT NULL , granted_powers longtext , spell_1 varchar , spell_2 varchar , spell_3 varchar , spell_4 varchar , spell_5 varchar , spell_6 varchar , spell_7 varchar , spell_8 varchar , spell_9 varchar , full_text longtext , reference varchar )
+CREATE TABLE equipment (id INTEGER PRIMARY KEY NOT NULL , name varchar NOT NULL , family varchar , category varchar , subcategory varchar , cost varchar , dmg_s varchar , armor_shield_bonus varchar , maximum_dex_bonus varchar , dmg_m varchar , weight varchar , critical varchar , armor_check_penalty varchar , arcane_spell_failure_chance varchar , range_increment varchar , speed_30 varchar , type varchar , speed_20 varchar , full_text longtext , reference varchar )
+CREATE TABLE feat (id INTEGER PRIMARY KEY NOT NULL , name varchar NOT NULL , type varchar , multiple varchar , stack varchar , choice varchar , prerequisite longtext , benefit longtext , normal longtext , special longtext , full_text longtext , reference varchar )
+CREATE TABLE item (id INTEGER PRIMARY KEY NOT NULL , name varchar NOT NULL , category varchar , subcategory varchar , special_ability varchar , aura varchar , caster_level varchar , price varchar , manifester_level varchar , prereq longtext , cost varchar , weight varchar , full_text longtext , reference varchar )
+CREATE TABLE monster (id INTEGER PRIMARY KEY NOT NULL , family varchar , name varchar NOT NULL , altname varchar , size varchar , type varchar , descriptor varchar , hit_dice varchar , initiative varchar , speed varchar , armor_class varchar , base_attack varchar , grapple varchar , attack varchar , full_attack longtext , space varchar , reach varchar , special_attacks varchar , special_qualities longtext , saves varchar , abilities varchar , skills longtext , bonus_feats varchar , feats longtext , epic_feats longtext , environment varchar , organization longtext , challenge_rating varchar , treasure varchar , alignment varchar , advancement varchar , level_adjustment varchar , special_abilities longtext , stat_block longtext , full_text longtext , reference varchar )
+CREATE TABLE power (id INTEGER PRIMARY KEY NOT NULL , name varchar NOT NULL , discipline varchar , subdiscipline varchar , descriptor varchar , level varchar , display varchar , manifesting_time varchar , range varchar , target varchar , area varchar , effect varchar , duration varchar , saving_throw varchar , power_points varchar , power_resistance varchar , short_description longtext , xp_cost longtext , description longtext , augment longtext , full_text longtext , reference varchar )
+CREATE TABLE skill (id INTEGER PRIMARY KEY NOT NULL , name varchar NOT NULL , subtype longtext , key_ability varchar , psionic varchar , trained varchar , armor_check varchar , description longtext , skill_check longtext , action longtext , try_again longtext , special longtext , restriction longtext , synergy longtext , epic_use longtext , untrained longtext , full_text longtext , reference varchar )
+CREATE TABLE spell (id INTEGER PRIMARY KEY NOT NULL , name varchar NOT NULL , altname varchar , school varchar , subschool varchar , descriptor varchar , spellcraft_dc varchar , level varchar , components longtext , casting_time varchar , range varchar , target varchar , area varchar , effect varchar , duration varchar , saving_throw varchar , spell_resistance varchar , short_description varchar , to_develop longtext , material_components longtext , arcane_material_components varchar , focus longtext , description longtext , xp_cost longtext , arcane_focus varchar , wizard_focus varchar , verbal_components varchar , sorcerer_focus varchar , bard_focus varchar , cleric_focus varchar , druid_focus varchar , full_text longtext , reference varchar )
+
+CREATE TABLE monster (
+	id INTEGER PRIMARY KEY NOT NULL ,
+	family varchar ,
+	name varchar NOT NULL ,
+	altname varchar ,
+	size varchar ,
+	type varchar ,
+	descriptor varchar ,
+	hit_dice varchar ,
+	initiative varchar ,
+	speed varchar ,
+	armor_class varchar ,
+	base_attack varchar ,
+	grapple varchar ,
+	attack varchar ,
+	full_attack longtext ,
+	space varchar ,
+	reach varchar ,
+	special_attacks varchar ,
+	special_qualities longtext ,
+	saves varchar ,
+	abilities varchar ,
+	skills longtext ,
+	bonus_feats varchar ,
+	feats longtext ,
+	epic_feats longtext ,
+	environment varchar ,
+	organization longtext ,
+	challenge_rating varchar ,
+	treasure varchar ,
+	alignment varchar ,
+	advancement varchar ,
+	level_adjustment varchar ,
+	special_abilities longtext ,
+	stat_block longtext ,
+	full_text longtext ,
+	reference varchar )
+			
+CREATE TABLE spell (
+	id INTEGER PRIMARY KEY NOT NULL ,
+	name varchar NOT NULL ,	
+	altname varchar ,	
+	school varchar ,
+	subschool varchar ,
+	descriptor varchar ,
+	spellcraft_dc varchar ,
+	level varchar ,
+	components longtext ,
+	casting_time varchar ,
+	range varchar ,
+	target varchar ,
+	area varchar ,
+	effect varchar ,
+	duration varchar ,
+	saving_throw varchar ,
+	spell_resistance varchar ,
+	short_description varchar ,
+	to_develop longtext ,
+	material_components longtext ,
+	arcane_material_components varchar ,
+	focus longtext ,
+	description longtext ,
+	xp_cost longtext ,
+	arcane_focus varchar ,
+	wizard_focus varchar ,
+	verbal_components varchar ,
+	sorcerer_focus varchar ,
+	bard_focus varchar ,
+	cleric_focus varchar ,
+	druid_focus varchar ,
+	full_text longtext ,
+	reference varchar )		
+
+CREATE TABLE item (
+	id INTEGER PRIMARY KEY NOT NULL ,
+	name varchar NOT NULL ,
+	category varchar ,
+	subcategory varchar ,
+	special_ability varchar ,
+	aura varchar ,
+	caster_level varchar ,
+	price varchar ,
+	manifester_level varchar ,
+	prereq longtext ,
+	cost varchar ,
+	weight varchar ,
+	full_text longtext ,
+	reference varchar )
+	
+CREATE TABLE equipment (
+	id INTEGER PRIMARY KEY NOT NULL ,
+	name varchar NOT NULL ,
+	family varchar ,
+	category varchar ,
+	subcategory varchar ,
+	cost varchar ,
+	dmg_s varchar ,
+	armor_shield_bonus varchar ,
+	maximum_dex_bonus varchar ,
+	dmg_m varchar ,
+	weight varchar ,
+	critical varchar ,
+	armor_check_penalty varchar ,
+	arcane_spell_failure_chance varchar ,
+	range_increment varchar ,
+	speed_30 varchar ,
+	type varchar ,
+	speed_20 varchar ,
+	full_text longtext ,
+	reference varchar )
+	
+CREATE TABLE feat (
+	id INTEGER PRIMARY KEY NOT NULL ,
+	name varchar NOT NULL ,
+	type varchar ,
+	multiple varchar ,
+	stack varchar ,
+	choice varchar ,
+	prerequisite longtext 
+	benefit longtext ,
+	normal longtext ,
+	special longtext ,
+	full_text longtext ,
+	reference varchar )
