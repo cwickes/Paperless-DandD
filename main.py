@@ -1,6 +1,7 @@
 import math, pickle, random
 import numpy as np
 import matplotlib.pyplot as plt
+import sqlite3
 
 '''********************GLOBAL VARIABLES********************'''
 # holds all types of character data
@@ -17,9 +18,11 @@ cmdList = ["set level", "reset mana", "set mana max",
            "set mana", "cast", "restore", "set hp", "reset hp",
            "set hp max", "damage", "heal", "set init",
            "set cond note", "sleep", "wake", "set style",
-           "set location", "fight", "clear ecs", "clear pcs", "new character",
-           "remove character", "commands", "save", "load all",
-           "load pcs", "load ecs", "load character", "quit"]
+           "set location", "fight", "clear ecs", "clear pcs",
+           "new character", "remove character", "commands",
+           "save", "load all", "load pcs", "load ecs",
+           "search", "random ec", "load character",
+           "character info", "characters", "help", "quit"]
 
 
 '''********************CLASSES********************'''
@@ -109,7 +112,7 @@ class pc:
         self.hp = hp
 
     def setHpMax(self, hp):
-        self.hpMax = hp
+        self.hpMax = int(hp)
 
     def dmg(self, dmg):
         self.hp -= int(dmg)
@@ -225,13 +228,224 @@ class ec:
         if (self.active == False):
             hpstr += " (unconscious)"
 
-        ecstr = [self.name, str(self.style), manastr, hpstr, str(self.init)]
+        ecstr = [self.name, str(self.style).capitalize(), manastr, hpstr, str(self.init)]
 
         return ecstr
 
 
 
-    '''********************FUNCTIONS********************'''
+import sqlite3
+
+class DND_DB:
+	def __init__(self, name = "dnd35.db"):
+		db = sqlite3.connect(name)
+		self.cursor = db.cursor()
+		
+	def monsters(self, monName):
+		monName = monName.title()
+		print()
+		if (monName == "Aberration" or monName == "Animal" or monName == "Celestial" or
+		monName == "Construct" or monName == "Dragon" or monName == "Elemental" or
+		monName == "Fey" or monName == "Fiend" or monName == "Giant" or monName == "Humanoid" or
+		monName == "Magical Beast" or monName == "Monstrous Humanoid" or monName == "Ooze" or
+		monName == "Outsider" or monName == "Plant" or monName == "Undead" or monName == "Vermin"):
+			print(monName + " is a monster type, do you want monsters of that type listed? (y/n)")
+			yes = input()
+			if (yes.lower() == "y" or yes.lower() == "yes"):
+					self.monsterByType(monName)
+		else:
+			attributes = ["id", "family", "name", "altname", "size", "type", "descriptor", "hit_dice", 
+			"initiative", "speed", "armor_class", "base_attack", "grapple", "attack", "full_attack",
+			"space", "reach", "special_attacks", "special_qualities", "saves", "abilities", "skills",
+			"bonus_feats", "feats", "epic_feats", "environment", "organization", "challenge_rating",
+			"treasure", "alignment", "advancement", "level_adjustment", "special_abilities",
+			"stat_block", "full_text", "reference"]
+			format = "SELECT * FROM monster WHERE (name='" + monName + "' OR altname='" + monName + "')"
+			self.cursor.execute(format)
+			if (len(self.cursor.fetchall()) == 0):
+				print("You did not enter a valid monster name.")
+			else:
+				self.cursor.execute(format)
+				temp = self.cursor.fetchall()[0]
+				for x in range (1, len(temp) - 2):
+					print(attributes[x] + ": " + temp[x])
+				
+	def monsterByType(self, monName):
+		monName = monName.capitalize()
+		print()
+		format = "SELECT name FROM monster WHERE type='" + monName + "'"
+		self.cursor.execute(format)
+		if (len(self.cursor.fetchall()) == 0):
+			print("You did not enter a valid monster name.")
+		else:
+			self.cursor.execute(format)
+			temp = self.cursor.fetchall()
+			for x in range (0, len(temp)):
+				print(temp[x])
+				
+	def spells(self, spellName):
+		print()
+		attributes = ["id", "name", "altname", "school", "subschool", "descriptor", "spellcraft_dc",
+		"level", "components", "casting_time", "range", "target", "area", "effect", "duration",
+		"saving_throw", "spell_resistance", "short_description", "to_develop", "arcane_material_components",
+		"focus", "description", "xp_cost", "arcane_focus", "wizard_focus", "verbal_components",
+		"sorcerer_focus", "bard_focus", "cleric_focus", "druid_focus", "full_attack", "reference"]
+		format = "SELECT * FROM spell WHERE (name='" + spellName + "' OR altname='" + spellName + "')"
+		self.cursor.execute(format)
+		if (len(self.cursor.fetchall()) == 0):
+			print("You did not enter a valid spell name.")
+		else:
+			self.cursor.execute(format)
+			temp = self.cursor.fetchall()[0]
+			for x in range (1, len(temp) - 2):
+				print(attributes[x] + ": " + temp[x])
+	
+	
+	def spells1wizard(self):
+		level = input()
+		format = "SELECT name FROM spell WHERE level=1"
+		self.cursor.execute(format)
+		if (len(self.cursor.fetchall()) == 0):
+			print("You did not enter a valid spell name.")
+		else:
+			self.cursor.execute(format)
+			temp = self.cursor.fetchall()[0]
+			for x in range (1, len(temp) - 2):
+				print(temp[x])
+			
+	def items(self, itemName):
+		itemName = itemName.capitalize()
+		print()
+		attributes = ["id", "name", "category", "subcategory", "special_ability", "aura", "caster_level",
+		"price", "manifester_level", "prereq", "cost", "weight", "full_text", "reference"]
+		format = "SELECT * FROM item WHERE name='" + itemName + "'"
+		self.cursor.execute(format)
+		if (len(self.cursor.fetchall()) == 0):
+			print("You did not enter a valid item name.")
+		else:
+			self.cursor.execute(format)
+			temp = self.cursor.fetchall()[0]
+			for x in range (1, len(temp) - 2):
+				print(attributes[x] + ": " + temp[x])
+				
+	def equipment(self, eName):
+		eName = eName.capitalize()
+		print()
+		attributes = ["id", "name", "family", "category", "subcategory", "cost", "dmg_s",
+		"armor_shield_bonus", "maximum_dex_bonus", "dmg_m",
+		"weight", "critical", "armor_check_penalty", "arcane_spell_failure_chance", "range_increment",
+		"speed_30", "type", "speed_20", "full_text", "reference"]
+		format = "SELECT * FROM equipment WHERE name='" + eName + "'"
+		self.cursor.execute(format)
+		if (len(self.cursor.fetchall()) == 0):
+			print("You did not enter a valid item name.")
+		else:
+			self.cursor.execute(format)
+			temp = self.cursor.fetchall()[0]
+			for x in range (1, len(temp) - 2):
+				print(attributes[x] + ": " + temp[x])
+				
+	def monsterAlignment(self, monAlign):
+		print()
+		format = "SELECT name FROM monster WHERE alignment='" + monAlign + "'"
+		self.cursor.execute(format)
+		if (len(self.cursor.fetchall()) != 0):
+			self.cursor.execute(format)
+			temp = self.cursor.fetchall()
+			for x in range (0, len(temp)):
+				print(temp[x][0] + monAlign)			
+		format = "SELECT name FROM monster WHERE alignment='Usually " + monAlign + "'"
+		self.cursor.execute(format)
+		if (len(self.cursor.fetchall()) != 0):
+			self.cursor.execute(format)
+			temp = self.cursor.fetchall()
+			for x in range (0, len(temp)):
+				print(temp[x][0] + " is Usually " + monAlign)				
+		format = "SELECT name FROM monster WHERE alignment='Always " + monAlign + "'"
+		self.cursor.execute(format)
+		if (len(self.cursor.fetchall()) != 0):
+			self.cursor.execute(format)
+			temp = self.cursor.fetchall()
+			for x in range (0, len(temp)):
+				print(temp[x][0] + " is Always " + monAlign)		
+		format = "SELECT name FROM monster WHERE alignment='Often " + monAlign + "'"
+		self.cursor.execute(format)
+		if (len(self.cursor.fetchall()) == 0):
+			print("You did not enter a valid alignment")
+		else:
+			self.cursor.execute(format)
+			temp = self.cursor.fetchall()
+			for x in range (0, len(temp)):
+				print(temp[x][0] + " is Often" + monAlign)
+			
+	def magicSchool(self, school):
+		school = school.capitalize()
+		print()
+		format = "SELECT name, level FROM spell WHERE school='" + school + "'"
+		self.cursor.execute(format)
+		if (len(self.cursor.fetchall()) == 0):
+			print("You did not enter a valid school of magic")
+		else:
+			self.cursor.execute(format)
+			temp = self.cursor.fetchall()
+			for x in range (0, len(temp)):
+				print(temp[x][0] + ", available to: " + temp[x][1])
+				
+	
+	def feats(self, feat):
+		print()
+		attributes = ["id", "name", "type", "multiple", "stack", "choice", "prerequisite",
+		"benefit", "normal", "special", "full_text", "reference"]
+		format = "SELECT * FROM feat WHERE name='" + feat + "'"
+		self.cursor.execute(format)
+		if (len(self.cursor.fetchall()) == 0):
+			print("You did not enter a valid feat name.")
+		else:
+			self.cursor.execute(format)
+			temp = self.cursor.fetchall()[0]
+			for x in range (1, len(temp) - 2):
+				print(attributes[x] + ": " + temp[x])
+
+
+'''********************FUNCTIONS********************'''
+def ecCreate(autoGen = True):
+    # DB connect
+    dbFile = 'dnd35.db'
+    con = sqlite3.connect(dbFile)
+    cur = con.cursor()
+
+    # Retrieve number of monsters in table
+    cur.execute("SELECT COUNT(*) FROM monster;")
+    monsterCount = cur.fetchone()[0]
+
+    # Random monster selection from local SQLite DB
+    monster = str(random.randint(1, monsterCount))
+    cur.execute("SELECT name, challenge_rating, type, hit_dice FROM monster WHERE id = " + monster + ";")
+    monsterData = cur.fetchone()
+
+    # initialize monster data
+    name = monsterData[0]
+    lvl = monsterData[1]
+    style = monsterData[2]
+
+    if autoGen == True:
+        hp = monsterData[3].split()
+        hp = hp[1][1:]
+        temp = ''
+        for d in hp:
+            if (d.isdigit()):
+                temp+=d
+        hp = temp
+        hp = int(hp)
+    else:
+            hp = int(input('Set health for ' + name + ' with CR of ' + lvl + ': '))
+
+    # prompt DM to determine mana for monster
+    mana = int(input('Set mana for ' + name + ' with CR of ' + lvl + ': '))
+
+    return ec(name, lvl, style, hp, mana)
+
+
 
 # print list of commands
 def printCommands():
@@ -323,6 +537,7 @@ def rollInitiative(prompt = False):
             for character in gameData['pcs']:
                 character.setInit(rollDice(20))
                 print(character.name, ':', character.init)
+            print("\nEnemies:")
             for character in gameData['ecs']:
                 character.setInit(rollDice(20))
                 print(character.name, ':', character.init)
@@ -479,13 +694,16 @@ def newCharacter():
 def save():
     global gameData
     filename = input("Enter the name of the save file\n")
-    saveFile = open(filename, "wb")
-    pickle.dump(gameData['pcs'], saveFile)
-    pickle.dump(gameData['ecs'], saveFile)
+    try:
+        saveFile = open(filename, "wb")
+        pickle.dump(gameData['pcs'], saveFile)
+        pickle.dump(gameData['ecs'], saveFile)
 
-    saveFile.close()
+        saveFile.close()
 
-    print("Session data saved")
+        print("Session data saved")
+    except:
+        print("Unable to save at", filename)
 
 def load_all(load_type = ""):
     global gameData
@@ -495,32 +713,34 @@ def load_all(load_type = ""):
         load_type = ""
     
     filename = input("Enter the name of the save file\n")
-    loadFile = open(filename, "rb")
-    if (load_type == "" or load_type == "pc"):
-        pc_load = pickle.load(loadFile)
-        if (name != ""):
-            for character in pc_load:
-                if (name == character.name.lower()):
-                    pc_load = [character]
-        gameData['pcs'] += pc_load
-    if (load_type == "" or load_type == "ec"):
-        ec_load = pickle.load(loadFile)
-        if (name != ""):
-            for character in ec_load:
-                if (name == character.name.lower()):
-                    ec_load = [character]
-        gameData['ecs'] += ec_load
+    try:
+        loadFile = open(filename, "rb")
+        if (load_type == "" or load_type == "pc"):
+            pc_load = pickle.load(loadFile)
+            if (name != ""):
+                for character in pc_load:
+                    if (name == character.name.lower()):
+                        pc_load = [character]
+            gameData['pcs'] += pc_load
+        if (load_type == "" or load_type == "ec"):
+            ec_load = pickle.load(loadFile)
+            if (name != ""):
+                for character in ec_load:
+                    if (name == character.name.lower()):
+                        ec_load = [character]
+            gameData['ecs'] += ec_load
 
-    loadFile.close()
-
-    print("Data loaded")
+        loadFile.close()
+        print("Data loaded")
+    except:
+        print("Unable to load", filename)
 
 
 '''****************MAIN****************'''
 
 
 print("Initializing game...")
-
+db = DND_DB()
 '''INITIALIZE CHARACTERS'''
 # prompts for load of previous characters
 while True:
@@ -556,9 +776,7 @@ print("\n\nStarting Game\n\n")
 printCommands()
 combat_start = False
 
-# CURRENTLY LEFT TO BE IMPLEMENTED: fight, getInfo (i think michael),
-                                    # plus whatever new commands yall add (check comment
-                                    # at top for adding commands to list in beginning)
+# CURRENTLY LEFT TO BE IMPLEMENTED: 
 
 # MAIN GAME WHILE LOOP FOR COMMANDS
 while True:
@@ -566,9 +784,9 @@ while True:
     command = command.lower()
 
     if command not in cmdList:
-        print("Invalid command. Enter 'commands' to view valid commands.")
+        print('Invalid command. Enter "help" to view valid commands.')
         continue
-    elif command == 'commands':
+    elif (command == 'commands' or command == "help"):
         printCommands()
         continue
     elif command == 'set level':
@@ -589,17 +807,17 @@ while True:
     elif command == 'set mana':
         name = getPCName()
         charType, charIndex = characterIndex(name)
-        gameData[charType][charIndex].setManaMax(getFuncCount("mana"))
+        gameData[charType][charIndex].setMana(getFuncCount("mana"))
         continue
     elif command == 'cast':
         name = getPCName()
         charType, charIndex = characterIndex(name)
-        gameData[charType][charIndex].setManaMax(getFuncCount("mana"))
+        gameData[charType][charIndex].cast(getFuncCount("mana"))
         continue
     elif command == 'restore':
         name = getPCName()
         charType, charIndex = characterIndex(name)
-        gameData[charType][charIndex].setManaMax(getFuncCount("mana"))
+        gameData[charType][charIndex].restore(getFuncCount("mana"))
         continue
     elif command == "set hp":
         name = getPCName()
@@ -614,17 +832,17 @@ while True:
     elif command == 'set hp max':
         name = getPCName()
         charType, charIndex = characterIndex(name)
-        gameData[charType][charIndex].setManaMax(getFuncCount("hp"))
+        gameData[charType][charIndex].setHpMax(getFuncCount("hp"))
         continue
     elif command == 'damage':
         name = getPCName()
         charType, charIndex = characterIndex(name)
-        gameData[charType][charIndex].setHp(getFuncCount("damage"))
+        gameData[charType][charIndex].dmg(getFuncCount("damage"))
         continue
     elif command == 'heal':
         name = getPCName()
         charType, charIndex = characterIndex(name)
-        gameData[charType][charIndex].setHp(getFuncCount("health"))
+        gameData[charType][charIndex].heal(getFuncCount("health"))
         continue
     elif command == 'set init':
         name = getPCName()
@@ -662,6 +880,25 @@ while True:
         print("\nEnemies:")
         for character in gameData['ecs']:
             print(character.name)
+    elif (command == "character info"):
+        name = getPCName()
+        charType, charIndex = characterIndex(name)
+        char = gameData[charType][charIndex]
+        charinfo = char.getInfo()
+        print("Name:", char.name)
+        print("Level:", char.lvl)
+        print("Class:", char.style)
+        print("Health:", charinfo[3])
+        print("Mana:", charinfo[2])
+        print("Attributes:")
+        if (charType == 'pcs'):
+            for i in range(6):
+                print(attributes[i], ": ", char.attr[i], sep ='')
+            print("Items in bag:")
+            for item in char.inventory:
+                print(item.capitalize(), sep=', ')
+        else:
+            print("Location Encountered:", char.LocationEncountered)
     elif (command == "load all" or command == "load"):
         load_all()
         continue
@@ -688,6 +925,33 @@ while True:
         name = getPCName()
         charType, charIndex = characterIndex(name)
         del gameData[charType][charIndex]
+    elif command == 'search':
+        while(True):
+            search = input("What are you trying to search? (monsters, items, feats, spells, equipment) : ")
+            if(search in 'monsters'):
+                search = input("Which monster would you like to lookup? ")
+                db.monsters(search)
+                break
+            elif(search in 'spells'):
+                search = input("Which spell would you like to lookup? ")
+                db.spells(search)
+                break
+            elif(search in 'items'):
+                search = input("Which item would you like to lookup? ")
+                db.items(search)
+                break
+            elif(search in 'feats'):
+                search = input("Which feat would you like to lookup? ")
+                db.feats(search)
+                break
+            elif(search in 'equipment'):
+                search = input("Which equipment would you like to lookup? ")
+                db.equipment(search)
+                break
+            else:
+                print(search, "not recognized")
+    elif command == 'random ec':
+        gameData['ecs'].append(ecCreate())
     elif command == 'fight':
         combat_start = True
     elif command == 'new character':
@@ -699,6 +963,7 @@ while True:
             save()
         print("End of Session")
         break
+    
         
 
 
@@ -751,8 +1016,8 @@ while True:
             else:
                 rollInitiative(True)
             
-        print("     "+ "{:^5}".format("#") + "{:^15}".format("Name") + "{:^5}".format("Level") + 
-        "{:^15}".format("Mana") + "{:^15}".format("Health")  + "{:^19}".format("") + "     "+ "{:^5}".format("#") + "{:^15}".format("Name") + "{:^15}".format("Race/Type") + 
+        print("     "+ "{:^5}".format("#") + "{:^15}".format("Name") + "{:^7}".format("Level") + 
+        "{:^15}".format("Mana") + "{:^15}".format("Health")  + "{:^17}".format("") + "     "+ "{:^5}".format("#") + "{:^15}".format("Name") + "{:^15}".format("Race/Type") + 
         "{:^15}".format("Mana") + "{:^15}".format("Health"))
         num = (turn-1) % (len(gameData['pcs']) + len(gameData['ecs']))
         printRosterInfo(num)
@@ -788,7 +1053,7 @@ while True:
 
             elif (command[0] == "help"):
                 actions -= 1
-                print ( "Command List:\n",
+                print ( "Combat Command List:\n",
                         "quit\n",
                         'next turn or "+"\n',
                         'prev turn or "-"\n',
@@ -802,23 +1067,22 @@ while True:
             elif (command[0] == 'cast'):
                 name = getPCName()
                 charType, charIndex = characterIndex(name)
-                gameData[charType][charIndex].setManaMax(getFuncCount("mana"))
+                gameData[charType][charIndex].cast(getFuncCount("mana"))
                 continue
             elif (command[0] == 'restore'):
                 name = getPCName()
                 charType, charIndex = characterIndex(name)
-                gameData[charType][charIndex].setManaMax(getFuncCount("mana"))
+                gameData[charType][charIndex].restore(getFuncCount("mana"))
                 continue
-                continue
-            elif (command[0] == 'damage'):
+            elif (command[0] == 'damage' or command[0] == 'hurt'):
                 name = getPCName()
                 charType, charIndex = characterIndex(name)
-                gameData[charType][charIndex].setHp(getFuncCount("damage"))
+                gameData[charType][charIndex].dmg(getFuncCount("damage"))
                 continue
             elif (command[0] == 'heal'):
                 name = getPCName()
                 charType, charIndex = characterIndex(name)
-                gameData[charType][charIndex].setHp(getFuncCount("health"))
+                gameData[charType][charIndex].heal(getFuncCount("health"))
                 continue
             elif (command[0] == 'sleep'):
                 name = getPCName()
@@ -830,6 +1094,31 @@ while True:
                 charType, charIndex = characterIndex(name)
                 gameData[charType][charIndex].wake()
                 continue
+            elif (command[0] == 'search'):
+                while(True):
+                    search = input("What are you trying to search? (monsters, items, feats, spells, equipment) : ")
+                    if(search in 'monsters'):
+                        search = input("Which monster would you like to lookup? ")
+                        db.monsters(search)
+                        break
+                    elif(search in 'spells'):
+                        search = input("Which spell would you like to lookup? ")
+                        db.spells(search)
+                        break
+                    elif(search in 'items'):
+                        search = input("Which item would you like to lookup? ")
+                        db.items(search)
+                        break
+                    elif(search in 'feats'):
+                        search = input("Which feat would you like to lookup? ")
+                        db.feats(search)
+                        break
+                    elif(search in 'equipment'):
+                        search = input("Which equipment would you like to lookup? ")
+                        db.equipment(search)
+                        break
+                    else:
+                        print(search, "not recognized")
             
             ################## DOT SEPERATED ENTRY ##################
                 
@@ -998,21 +1287,23 @@ while True:
         ################## HURT/HEAL/CAST/RESTORE IMPLEMENTATION ###################
 
         elif (commandLen >= 3):
+                command[-1] = int(command[-1])
 
                 if (command[0] == "roll"):
                     print(command[2], " d", command[1], " : ", rollDice(int(command[1]), int(command[2])), sep ='')
                           
-                elif (command[0] == "hurt"):
+                elif (command[0] == "hurt" or command[0] == "damage"):
                         charType1, charIndex1 = characterIndex(command[1])
 
                         if isinstance(command[2], int):
-                                hurtstats[charIndex1] += command[2]
+                                hurtstats[charIndex1] += int(command[2])
                                 gameData[charType1][charIndex1].dmg(command[2])
 
                         elif isinstance(command[2], str):
                                 charType2, charIndex2 = characterIndex(command[2])
                                 dmgstats[charIndex2] += int(command[3])
-                                hurtstats[charIndex1] += int(command[3])
+                                if(charType1 == 'pcs'):
+                                    hurtstats[charIndex1] += int(command[3])
                                 gameData[charType1][charIndex1].dmg(command[3])
 
                 elif (command[0] == "heal"):
@@ -1020,7 +1311,7 @@ while True:
                         charType1, charIndex1 = characterIndex(command[1])
 
                         if isinstance(command[2], int):
-                                healstats[charIndex1] += command[2]
+                                healstats[charIndex1] += int(command[2])
                                 gameData[charType1][charIndex1].heal(command[2])
 
                         elif isinstance(command[2], str):
@@ -1033,11 +1324,12 @@ while True:
                         charType1, charIndex1 = characterIndex(command[1])
 
                         if isinstance(command[2], int):
-                                continue
+                                gameData[charType1][charIndex1].cast(command[2])
+                                manastats[charIndex1] += int(command[2])
 
                         elif isinstance(command[2],str):
                                 charType2, charIndex2 = characterIndex(command[2])
-                                manastats[charIndex2] -= int(command[3])
+                                manastats[charIndex2] += int(command[3])
                                 gameData[charType2][charIndex2].cast(command[3])
 
                 elif (command[0] == "restore"):
@@ -1045,15 +1337,13 @@ while True:
                         charType1, charIndex1 = characterIndex(command[1])
 
                         if isinstance(command[2], int):
-                                manastats[charIndex1] += command[2]
-                                gameDate[charType1][charIndex1].restore(command[2])
+                                gameData[charType1][charIndex1].restore(command[2])
 
                         elif isinstance(command[2],str):
                                 charType2, charIndex2 = characterIndex(command[2])
                                 healstats[charIndex2] += int(command[3])
-                                manastats[charIndex1] += int(command[3])                                            
-                                gameDate[charType1][charIndex1].restore(command[3])
-                                gameDate[charType2][charIndex2].heal(command[3])
+                                gameData[charType1][charIndex1].restore(command[3])
+                                gameData[charType2][charIndex2].heal(command[3])
                 elif (command[1] == "mana"):
                     charType, charIndex = characterIndex(command[1])
                     gameData[charType][charIndex].resetMana()
