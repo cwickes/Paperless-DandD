@@ -261,24 +261,48 @@ def printRosterInfo(num):
     name = ros[num].name
     if (len(gameData['pcs']) > len(gameData['ecs'])):
         moreEC = False
+        biglen = len(gameData['pcs'])
+        smalllen = len(gameData['ecs'])
     else:
         moreEC = True
-    if (moreEC):       
-        for i in range(len(gameData['pcs'])):
-            pcinfo = gameData['pcs'][i].getInfo()
+        biglen = len(gameData['ecs'])
+        smalllen = len(gameData['pcs'])     
+    for i in range(smalllen):
+        pcinfo = gameData['pcs'][i].getInfo()
+        ecinfo = gameData['ecs'][i].getInfo()
+        condString = "{:^15}"
+        if (len(gameData['pcs'][i].condNote) != 0):
+            condString = '{:^' + str(15-len(gameData['pcs'][i].condNote) + 5) + '}'
+        if (name == pcinfo[0] and namePC):
+            print("---->" + "{:^5}".format(str(i+1)) + "{:^15}".format(pcinfo[0]) + "{:^7}".format(str(pcinfo[1])) + 
+            "{:^15}".format(pcinfo[2]) + "{:^15}".format(pcinfo[3]) + "{:^2}".format(gameData['pcs'][i].condNote) + condString.format("") + "     " + "{:^5}".format(str(i+1)) + "{:^15}".format(ecinfo[0]) + "{:^15}".format(str(ecinfo[1])) + 
+            "{:^15}".format(ecinfo[2]) + "{:^15}".format(ecinfo[3]) + "{:^2}".format(gameData['ecs'][i].condNote))
+        elif(name == ecinfo[0] and not namePC):
+                print("     " + "{:^5}".format(str(i+1)) + "{:^15}".format(pcinfo[0]) + "{:^7}".format(str(pcinfo[1])) + 
+            "{:^15}".format(pcinfo[2]) + "{:^15}".format(pcinfo[3]) + "{:^2}".format(gameData['pcs'][i].condNote) + condString.format("") + "---->" + "{:^5}".format(str(i+1)) + "{:^15}".format(ecinfo[0]) + "{:^15}".format(str(ecinfo[1])) + 
+            "{:^15}".format(ecinfo[2]) + "{:^15}".format(ecinfo[3]) + "{:^2}".format(gameData['ecs'][i].condNote))
+        else:
+            print("     " + "{:^5}".format(str(i+1)) + "{:^15}".format(pcinfo[0]) + "{:^7}".format(str(pcinfo[1])) + 
+            "{:^15}".format(pcinfo[2]) + "{:^15}".format(pcinfo[3]) + "{:^2}".format(gameData['pcs'][i].condNote) + condString.format("") + "     " + "{:^5}".format(str(i+1)) + "{:^15}".format(ecinfo[0]) + "{:^15}".format(str(ecinfo[1])) + 
+            "{:^15}".format(ecinfo[2]) + "{:^15}".format(ecinfo[3]) + "{:^2}".format(gameData['ecs'][i].condNote))
+    for i in range(smalllen, biglen):
+        condString = "{:^15}"
+        if (moreEC):
             ecinfo = gameData['ecs'][i].getInfo()
+            if(name == ecinfo[0] and not namePC):
+                print("{:^64}".format("") + condString.format("") + "---->" + "{:^5}".format(str(i+1)) + "{:^15}".format(ecinfo[0]) + "{:^15}".format(str(ecinfo[1])) + 
+                "{:^15}".format(ecinfo[2]) + "{:^15}".format(ecinfo[3]) + "{:^2}".format(gameData['ecs'][i].condNote))
+            else:
+                print("{:^64}".format("") + condString.format("") + "     " + "{:^5}".format(str(i+1)) + "{:^15}".format(ecinfo[0]) + "{:^15}".format(str(ecinfo[1])) + 
+                "{:^15}".format(ecinfo[2]) + "{:^15}".format(ecinfo[3]) + "{:^2}".format(gameData['ecs'][i].condNote))
+        else:
+            pcinfo = gameData['pcs'][i].getInfo()
             if (name == pcinfo[0] and namePC):
                 print("---->" + "{:^5}".format(str(i+1)) + "{:^15}".format(pcinfo[0]) + "{:^5}".format(str(pcinfo[1])) + 
-                "{:^15}".format(pcinfo[2]) + "{:^15}".format(pcinfo[3]) + "{:^10}".format(" ") + "     " + "{:^5}".format(str(i+1)) + "{:^15}".format(ecinfo[0]) + "{:^15}".format(str(ecinfo[1])) + 
-                "{:^15}".format(ecinfo[2]) + "{:^15}".format(ecinfo[3]))
-            elif(name == ecinfo[0] and not namePC):
-                 print("     " + "{:^5}".format(str(i+1)) + "{:^15}".format(pcinfo[0]) + "{:^5}".format(str(pcinfo[1])) + 
-                "{:^15}".format(pcinfo[2]) + "{:^15}".format(pcinfo[3]) + "{:^10}".format(" ") + "---->" + "{:^5}".format(str(i+1)) + "{:^15}".format(ecinfo[0]) + "{:^15}".format(str(ecinfo[1])) + 
-                "{:^15}".format(ecinfo[2]) + "{:^15}".format(ecinfo[3]))
+                "{:^15}".format(pcinfo[2]) + "{:^15}".format(pcinfo[3]) + "{:^2}".format(gameData['pcs'][i].condNote))
             else:
                 print("     " + "{:^5}".format(str(i+1)) + "{:^15}".format(pcinfo[0]) + "{:^5}".format(str(pcinfo[1])) + 
-                "{:^15}".format(pcinfo[2]) + "{:^15}".format(pcinfo[3]) + "{:^10}".format(" ") + "     " + "{:^5}".format(str(i+1)) + "{:^15}".format(ecinfo[0]) + "{:^15}".format(str(ecinfo[1])) + 
-                "{:^15}".format(ecinfo[2]) + "{:^15}".format(ecinfo[3]))
+                "{:^15}".format(pcinfo[2]) + "{:^15}".format(pcinfo[3]) + "{:^2}".format(gameData['pcs'][i].condNote))
     print("")
 
 def rollInitiative(prompt = False):
@@ -327,7 +351,7 @@ def combatGraph(stat_type, stats):
 # prompts for character name and checks all lists to see if it exists
 def getPCName():
     global gameData
-    charName = input("Which character? ")
+    charName = input("Which character? ").lower()
     while True:
         check = 0
         for i in range(len(gameData['pcs'])):
@@ -666,9 +690,6 @@ while True:
         del gameData[charType][charIndex]
     elif command == 'fight':
         combat_start = True
-
-
-
     elif command == 'new character':
         newCharacter()
         continue
@@ -678,7 +699,7 @@ while True:
             save()
         print("End of Session")
         break
-    	
+        
 
 
 
@@ -700,6 +721,7 @@ while True:
         manastats = []
         healstats = []
         hurtstats = []
+        print("Starting Combat")
         for i in range(len(gameData['pcs'])):
                 dmgstats.append(0)
                 manastats.append(0)
@@ -713,7 +735,7 @@ while True:
         print("\n" * 5)
         if(actions < 5):
                 print('Enter a command or type "help" for a list of commands')
-			
+            
         if(gameData['pcs'][0].init != 0):
             num = (turn) % (len(gameData['pcs']) + len(gameData['ecs']))
             roundNum = int((turn) / (len(gameData['pcs']) + len(gameData['ecs'])) + 1)
@@ -730,7 +752,7 @@ while True:
                 rollInitiative(True)
             
         print("     "+ "{:^5}".format("#") + "{:^15}".format("Name") + "{:^5}".format("Level") + 
-        "{:^15}".format("Mana") + "{:^15}".format("Health")  + "{:^10}".format("") + "     "+ "{:^5}".format("#") + "{:^15}".format("Name") + "{:^15}".format("Race/Type") + 
+        "{:^15}".format("Mana") + "{:^15}".format("Health")  + "{:^19}".format("") + "     "+ "{:^5}".format("#") + "{:^15}".format("Name") + "{:^15}".format("Race/Type") + 
         "{:^15}".format("Mana") + "{:^15}".format("Health"))
         num = (turn-1) % (len(gameData['pcs']) + len(gameData['ecs']))
         printRosterInfo(num)
@@ -741,7 +763,7 @@ while True:
         command = command.lower()
         command = command.split(' ')
         commandLen = len(command)
-		
+        
         ########### MENU OPTIONS BASED ON NUMBER OF ARGUMENTS ###########
 
         if (commandLen == 1):
@@ -771,15 +793,46 @@ while True:
                         'next turn or "+"\n',
                         'prev turn or "-"\n',
                         "roll [n-sided dice] [n-times]\n",
-                        "reset-hp [to-player]\n",
-                        "reset-mana [to-player]\n",
+                        "reset hp [to-player]\n",
+                        "reset mana [to-player]\n",
                         "hurt [to-player] [by-player] [damage-amount]\n",
                         "heal [to-player] [by-player] [heal-amount]\n",
                         "cast [to-player] [by-player] [mana-lost]\n",
                         "restore [to-player] [by-player] [mana-gained]\n",)
-			
-			################## DOT SEPERATED ENTRY ##################
-				
+            elif (command[0] == 'cast'):
+                name = getPCName()
+                charType, charIndex = characterIndex(name)
+                gameData[charType][charIndex].setManaMax(getFuncCount("mana"))
+                continue
+            elif (command[0] == 'restore'):
+                name = getPCName()
+                charType, charIndex = characterIndex(name)
+                gameData[charType][charIndex].setManaMax(getFuncCount("mana"))
+                continue
+                continue
+            elif (command[0] == 'damage'):
+                name = getPCName()
+                charType, charIndex = characterIndex(name)
+                gameData[charType][charIndex].setHp(getFuncCount("damage"))
+                continue
+            elif (command[0] == 'heal'):
+                name = getPCName()
+                charType, charIndex = characterIndex(name)
+                gameData[charType][charIndex].setHp(getFuncCount("health"))
+                continue
+            elif (command[0] == 'sleep'):
+                name = getPCName()
+                charType, charIndex = characterIndex(name)
+                gameData[charType][charIndex].sleep()
+                continue
+            elif (command[0] == 'wake'):
+                name = getPCName()
+                charType, charIndex = characterIndex(name)
+                gameData[charType][charIndex].wake()
+                continue
+            
+            ################## DOT SEPERATED ENTRY ##################
+                
             elif(len(command[0].split('.')) > 1):
                 dotStmt = command[0].split(".")
                 dotStmtLen = len(dotStmt)
@@ -918,81 +971,98 @@ while True:
                                                 manastats[int(dotStmt[2])] += int(dotStmt[3])
                                         else:
                                                 gameData['ecs'][int(dotStmt[2])].cast(int(dotStmt[3]))
+            else:
+                print("Unrecognized command")
                             
         ################## END DOT SEPERATED ENTRY ##################
 
-            elif (commandLen == 2):
-                if (command[0] == "reset-mana"):
+        elif (commandLen == 2):
+            if (command[1] == 'hp'):
+                name = getPCName()
+                charType, charIndex = characterIndex(name)
+                gameData[charType][charIndex].resetHp()
+            elif (command[1] == 'mana'):
+                name = getPCName()
+                charType, charIndex = characterIndex(name)
+                gameData[charType][charIndex].resetMana()
+                continue
+            
+            elif (command[0] == "roll"):
+                print("1 d", command[1], " : ", rollDice(int(command[1])), sep ='')
+            elif (command[0] == "reset-hp"):
+                gameData[charType][charIndex].resetHp()
+            else:
+                print("Unrecognized command")
+                
+
+        ################## HURT/HEAL/CAST/RESTORE IMPLEMENTATION ###################
+
+        elif (commandLen >= 3):
+
+                if (command[0] == "roll"):
+                    print(command[2], " d", command[1], " : ", rollDice(int(command[1]), int(command[2])), sep ='')
+                          
+                elif (command[0] == "hurt"):
+                        charType1, charIndex1 = characterIndex(command[1])
+
+                        if isinstance(command[2], int):
+                                hurtstats[charIndex1] += command[2]
+                                gameData[charType1][charIndex1].dmg(command[2])
+
+                        elif isinstance(command[2], str):
+                                charType2, charIndex2 = characterIndex(command[2])
+                                dmgstats[charIndex2] += command[3]
+                                hurtstats[charIndex1] += command[3]
+                                gameData[charType1][charIndex1].dmg(command[3])
+
+                elif (command[0] == "heal"):
+
+                        charType1, charIndex1 = characterIndex(command[1])
+
+                        if isinstance(command[2], int):
+                                healstats[charIndex1] += command[2]
+                                gameData[charType1][charIndex1].heal(command[2])
+
+                        elif isinstance(command[2], str):
+                                charType2, charIndex2 = characterIndex(command[2])
+                                healstats[charIndex1] += command[3]
+                                gameData[charType1][charIndex1].heal(command[3])
+
+                elif (command[0] == "cast"):
+
+                        charType1, charIndex1 = characterIndex(command[1])
+
+                        if isinstance(command[2], int):
+                                continue
+
+                        elif isinstance(command[2],str):
+                                charType2, charIndex2 = characterIndex(command[2])
+                                manastats[charIndex2] -= command[3]
+                                gameData[charType2][charIndex2].cast(command[3])
+
+                elif (command[0] == "restore"):
+
+                        charType1, charIndex1 = characterIndex(command[1])
+
+                        if isinstance(command[2], int):
+                                manastats[charIndex1] += command[2]
+                                gameDate[charType1][charIndex1].restore(command[2])
+
+                        elif isinstance(command[2],str):
+                                charType2, charIndex2 = characterIndex(command[2])
+                                healstats[charIndex2] += command[3]
+                                manastats[charIndex1] += command[3]                                            
+                                gameDate[charType1][charIndex1].restore(command[3])
+                                gameDate[charType2][charIndex2].heal(command[3])
+                elif (command[1] == "mana"):
                     charType, charIndex = characterIndex(command[1])
                     gameData[charType][charIndex].resetMana()
-                elif (command[0] == "reset-hp"):
+                elif (command[1] == "hp"):
                     charType, charIndex = characterIndex(command[1])
                     gameData[charType][charIndex].resetHp()
-                elif (command[0] == "roll"):
-                    print("1 d", command[1], " : ", rollDice(int(command[1])), sep ='')
-                elif (command[0] == "reset-hp"):
-                    gameData[charType][charIndex].resetHp()
+                else:
+                    print("Unrecognized command")
                     
-
-            ################## HURT/HEAL/CAST/RESTORE IMPLEMENTATION ###################
-
-            elif (commandLen >= 3):
-
-                    if (command[0] == "roll"):
-                        print(command[2], " d", command[1], " : ", rollDice(int(command[1]), int(command[2])), sep ='')
-                              
-                    elif (command[0] == "hurt"):
-                            charType1, charIndex1 = characterIndex(command[1])
-
-                            if isinstance(command[2], int):
-                                    hurtstats[charIndex1] += command[2]
-                                    gameData[charType1][charIndex1].dmg(command[2])
-
-                            elif isinstance(command[2], str):
-                                    charType2, charIndex2 = characterIndex(command[2])
-                                    dmgstats[charIndex2] += command[3]
-                                    hurtstats[charIndex1] += command[3]
-                                    gameData[charType1][charIndex1].dmg(command[3])
-
-                    elif (command[0] == "heal"):
-
-                            charType1, charIndex1 = characterIndex(command[1])
-
-                            if isinstance(command[2], int):
-                                    healstats[charIndex1] += command[2]
-                                    gameData[charType1][charIndex1].heal(command[2])
-
-                            elif isinstance(command[2], str):
-                                    charType2, charIndex2 = characterIndex(command[2])
-                                    healstats[charIndex1] += command[3]
-                                    gameData[charType1][charIndex1].heal(command[3])
-
-                    elif (command[0] == "cast"):
-
-                            charType1, charIndex1 = characterIndex(command[1])
-
-                            if isinstance(command[2], int):
-                                    continue
-
-                            elif isinstance(command[2],str):
-                                    charType2, charIndex2 = characterIndex(command[2])
-                                    manastats[charIndex2] -= command[3]
-                                    gameData[charType2][charIndex2].cast(command[3])
-
-                    elif (command[0] == "restore"):
-
-                            charType1, charIndex1 = characterIndex(command[1])
-
-                            if isinstance(command[2], int):
-                                    manastats[charIndex1] += command[2]
-                                    gameDate[charType1][charIndex1].restore(command[2])
-
-                            elif isinstance(command[2],str):
-                                    charType2, charIndex2 = characterIndex(command[2])
-                                    healstats[charIndex2] += command[3]
-                                    manastats[charIndex1] += command[3]                                            
-                                    gameDate[charType1][charIndex1].restore(command[3])
-                                    gameDate[charType2][charIndex2].heal(command[3])
 
     
         if(not combat_start):
