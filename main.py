@@ -312,11 +312,16 @@ def combatGraph(stat_type, stats):
         nameList.append(character.name)
     names = tuple(nameList)
     y_pos = np.arange(len(names))
+    plt.subplot(211)
     plt.bar(y_pos, stats, align='center', alpha=0.5)
     plt.xticks(y_pos, names)
     plt.ylabel(stat_type)
     plt.title(stat_type+" In Combat")
-     
+
+    plt.subplot(212)
+    plt.pie(stats, labels=names)
+
+    plt.tight_layout()
     plt.show()
 
 # prompts for character name and checks all lists to see if it exists
