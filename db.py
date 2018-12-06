@@ -171,7 +171,3 @@ class DND_DB:
 			temp = self.cursor.fetchall()[0]
 			for x in range (1, len(temp) - 2):
 				print(attributes[x] + ": " + temp[x])
-				
-				
-object = DND_DB()
-object.monsters("troll")
