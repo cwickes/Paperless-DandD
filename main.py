@@ -233,9 +233,6 @@ class ec:
         return ecstr
 
 
-
-import sqlite3
-
 class DND_DB:
 	def __init__(self, name = "dnd35.db"):
 		db = sqlite3.connect(name)
